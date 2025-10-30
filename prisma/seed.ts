@@ -1,9 +1,9 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma, $Enums } from "../app/generated/prisma";
 import { mockData } from "../mock";
 
 const prisma = new PrismaClient();
 
-async function main() {
+export async function main() {
   console.log("🌱 Starting database seeding...");
 
   // Clear existing data in reverse order of dependencies
@@ -16,14 +16,16 @@ async function main() {
   // Seed Churches
   console.log("⛪ Seeding churches...");
   for (const church of mockData.churches) {
+    const churchData: Prisma.ChurchesCreateInput = {
+      id: church.id,
+      name: church.name,
+      slug: church.slug,
+      createdAt: church.createdAt,
+      updatedAt: church.updatedAt,
+    };
+    
     await prisma.churches.create({
-      data: {
-        id: church.id,
-        name: church.name,
-        slug: church.slug,
-        createdAt: church.createdAt,
-        updatedAt: church.updatedAt,
-      },
+      data: churchData,
     });
   }
   console.log(`✅ Created ${mockData.churches.length} churches`);
@@ -31,30 +33,32 @@ async function main() {
   // Seed Members
   console.log("👥 Seeding members...");
   for (const member of mockData.members) {
+    const memberData: Prisma.MembersUncheckedCreateInput = {
+      id: member.id,
+      firstName: member.firstName,
+      lastName: member.lastName,
+      email: member.email,
+      phone: member.phone,
+      age: member.age,
+      street: member.street,
+      city: member.city,
+      state: member.state,
+      zip: member.zip,
+      country: member.country,
+      birthDate: member.birthDate,
+      baptismDate: member.baptismDate,
+      role: member.role as $Enums.MemberRole,
+      gender: member.gender as $Enums.Gender,
+      pictureUrl: member.pictureUrl,
+      notes: member.notes,
+      passwordHash: member.passwordHash,
+      church_id: member.church_id,
+      createdAt: member.createdAt,
+      updatedAt: member.updatedAt,
+    };
+    
     await prisma.members.create({
-      data: {
-        id: member.id,
-        firstName: member.firstName,
-        lastName: member.lastName,
-        email: member.email,
-        phone: member.phone,
-        age: member.age,
-        street: member.street,
-        city: member.city,
-        state: member.state,
-        zip: member.zip,
-        country: member.country,
-        birthDate: member.birthDate,
-        baptismDate: member.baptismDate,
-        role: member.role,
-        gender: member.gender,
-        pictureUrl: member.pictureUrl,
-        notes: member.notes,
-        passwordHash: member.passwordHash,
-        church_id: member.church_id,
-        createdAt: member.createdAt,
-        updatedAt: member.updatedAt,
-      },
+      data: memberData,
     });
   }
   console.log(`✅ Created ${mockData.members.length} members`);
@@ -62,15 +66,17 @@ async function main() {
   // Seed Ministries
   console.log("🙏 Seeding ministries...");
   for (const ministry of mockData.ministries) {
+    const ministryData: Prisma.MinistriesUncheckedCreateInput = {
+      id: ministry.id,
+      name: ministry.name,
+      description: ministry.description,
+      church_id: ministry.church_id,
+      createdAt: ministry.createdAt,
+      updatedAt: ministry.updatedAt,
+    };
+    
     await prisma.ministries.create({
-      data: {
-        id: ministry.id,
-        name: ministry.name,
-        description: ministry.description,
-        church_id: ministry.church_id,
-        createdAt: ministry.createdAt,
-        updatedAt: ministry.updatedAt,
-      },
+      data: ministryData,
     });
   }
   console.log(`✅ Created ${mockData.ministries.length} ministries`);
@@ -78,15 +84,17 @@ async function main() {
   // Seed Member-Ministry relationships
   console.log("🔗 Seeding member-ministry relationships...");
   for (const memberMinistry of mockData.memberMinistries) {
+    const memberMinistryData: Prisma.MemberMinistryUncheckedCreateInput = {
+      id: memberMinistry.id,
+      memberId: memberMinistry.memberId,
+      ministryId: memberMinistry.ministryId,
+      church_id: memberMinistry.church_id,
+      createdAt: memberMinistry.createdAt,
+      updatedAt: memberMinistry.updatedAt,
+    };
+    
     await prisma.memberMinistry.create({
-      data: {
-        id: memberMinistry.id,
-        memberId: memberMinistry.memberId,
-        ministryId: memberMinistry.ministryId,
-        church_id: memberMinistry.church_id,
-        createdAt: memberMinistry.createdAt,
-        updatedAt: memberMinistry.updatedAt,
-      },
+      data: memberMinistryData,
     });
   }
   console.log(
@@ -126,11 +134,4 @@ async function main() {
   console.log("\n🎉 Seeding completed successfully!");
 }
 
-main()
-  .catch((e) => {
-    console.error("❌ Error during seeding:", e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main();
