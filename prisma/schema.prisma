@@ -5,8 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -44,14 +43,13 @@ model Members {
   birthDate    DateTime?  @map("birth_date")
   baptismDate  DateTime?  @map("baptism_date")
   role         MemberRole @default(MIEMBRO)
-  gender       Gender
+  gender       Gender     @default(MASCULINO)
   pictureUrl   String?    @map("picture_url")
   notes        String?
-  skills       String[]   @default([])
   passwordHash String?    @map("password_hash")
   church_id    String
   createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
+  updatedAt    DateTime   @default(now()) @map("updated_at")
 
   // Relations
   church     Churches         @relation(fields: [church_id], references: [id], onDelete: Cascade)
