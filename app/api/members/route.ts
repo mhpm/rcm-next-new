@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { Prisma, $Enums } from '@prisma/client'
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { Prisma, $Enums } from "@/app/generated/prisma";
 
 export async function GET() {
   try {
@@ -25,29 +25,29 @@ export async function GET() {
           },
         },
       },
-    })
+    });
 
-    return NextResponse.json(members)
+    return NextResponse.json(members);
   } catch (error) {
-    console.error('Error fetching members:', error)
+    console.error("Error fetching members:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch members' },
+      { error: "Failed to fetch members" },
       { status: 500 }
-    )
+    );
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { 
-      firstName, 
-      lastName, 
-      email, 
-      phone, 
-      age, 
+    const body = await request.json();
+    const {
+      firstName,
+      lastName,
+      email,
+      phone,
+      age,
       church_id,
-      role = 'MEMBER',
+      role = "MEMBER",
       gender,
       street,
       city,
@@ -57,14 +57,14 @@ export async function POST(request: NextRequest) {
       birthDate,
       baptismDate,
       pictureUrl,
-      notes
-    } = body
+      notes,
+    } = body;
 
     if (!firstName || !lastName || !email || !church_id) {
       return NextResponse.json(
-        { error: 'First name, last name, email, and church_id are required' },
+        { error: "First name, last name, email, and church_id are required" },
         { status: 400 }
-      )
+      );
     }
 
     // Use Prisma.MembersUncheckedCreateInput for better type safety
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       pictureUrl,
       notes,
       church_id,
-    }
+    };
 
     const member = await prisma.members.create({
       data: memberData,
@@ -99,14 +99,14 @@ export async function POST(request: NextRequest) {
           },
         },
       },
-    })
+    });
 
-    return NextResponse.json(member, { status: 201 })
+    return NextResponse.json(member, { status: 201 });
   } catch (error) {
-    console.error('Error creating member:', error)
+    console.error("Error creating member:", error);
     return NextResponse.json(
-      { error: 'Failed to create member' },
+      { error: "Failed to create member" },
       { status: 500 }
-    )
+    );
   }
 }

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { Prisma } from '@prisma/client'
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/app/generated/prisma";
 
 export async function GET() {
   try {
@@ -32,28 +32,28 @@ export async function GET() {
           },
         },
       },
-    })
+    });
 
-    return NextResponse.json(ministries)
+    return NextResponse.json(ministries);
   } catch (error) {
-    console.error('Error fetching ministries:', error)
+    console.error("Error fetching ministries:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch ministries' },
+      { error: "Failed to fetch ministries" },
       { status: 500 }
-    )
+    );
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { name, description, church_id } = body
+    const body = await request.json();
+    const { name, description, church_id } = body;
 
     if (!name || !church_id) {
       return NextResponse.json(
-        { error: 'Name and church_id are required' },
+        { error: "Name and church_id are required" },
         { status: 400 }
-      )
+      );
     }
 
     // Use Prisma.MinistriesUncheckedCreateInput for better type safety
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       name,
       description,
       church_id,
-    }
+    };
 
     const ministry = await prisma.ministries.create({
       data: ministryData,
@@ -74,14 +74,14 @@ export async function POST(request: NextRequest) {
           },
         },
       },
-    })
+    });
 
-    return NextResponse.json(ministry, { status: 201 })
+    return NextResponse.json(ministry, { status: 201 });
   } catch (error) {
-    console.error('Error creating ministry:', error)
+    console.error("Error creating ministry:", error);
     return NextResponse.json(
-      { error: 'Failed to create ministry' },
+      { error: "Failed to create ministry" },
       { status: 500 }
-    )
+    );
   }
 }
