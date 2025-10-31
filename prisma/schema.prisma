@@ -50,7 +50,7 @@ model Members {
   passwordHash String?    @map("password_hash")
   church_id    String
   createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @default(now()) @map("updated_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
 
   // Relations
   church     Churches         @relation(fields: [church_id], references: [id], onDelete: Cascade)
